@@ -7,9 +7,13 @@ import requests
 # SESSION_ID='4792'
 # FIA_ID='2455'
 
-# Warm Up
-SESSION_ID='4793'
-FIA_ID='2460'
+# # Warm Up
+# SESSION_ID='4793'
+# FIA_ID='2460'
+
+# Race
+SESSION_ID='4794'
+FIA_ID='2461'
 
 
 def getMs() -> int:
