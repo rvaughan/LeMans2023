@@ -3,14 +3,20 @@ import time
 
 import requests
 
+# # FP4
+# SESSION_ID='4792'
+# FIA_ID='2455'
+
+# Warm Up
+SESSION_ID='4793'
+FIA_ID='2460'
+
 
 def getMs() -> int:
     return int(round(time.time() * 1000))
 
 
-check_url = 'https://streaming.24h-lemans.com/en/check?m=0&t=0'
 base_url = 'https://storage.googleapis.com/fiawec-prod/assets/live/WEC/__data.json'
-
 
 
 def getUrl(url: str) -> str:
@@ -25,16 +31,10 @@ def grab_url(url, filename):
 
 
 ms=getMs()
-filename = f'{ms}_check'
-data = requests.get(getUrl(check_url))
-if data.status_code == 200:
-    with open('{}.json'.format(filename), 'w') as f:
-        json.dump(data.json(), f)
 
-check = data.json()
-grab_url(check['configuration_url'], f'{ms}_config')
-grab_url(check['referential_url'], f'{ms}_reference')
-grab_url(check['result_url'], f'{ms}_result')
+grab_url(f'https://data.fiawec.com/data/{FIA_ID}', f'{ms}_remaining')
+grab_url(f'https://data.fiawec.com/stints/{FIA_ID}', f'{ms}_stints')
+grab_url(f'https://data.fiawec.com/laps/{FIA_ID}', f'{ms}_laps')
 
 
 filename = '{}'.format(getMs())
@@ -43,7 +43,13 @@ if data.status_code == 200:
     with open('{}.json'.format(filename), 'w') as f:
         json.dump(data.json(), f)
 
-url = 'https://storage.googleapis.com/ecm-prod/assets/live/4793.json?t={}'.format(filename)
+url = f'https://storage.googleapis.com/ecm-prod/assets/live/sessions/{SESSION_ID}.json?t={filename}'
+data = requests.get(url)
+if data.status_code == 200:
+    with open('{}_session.json'.format(filename), 'w') as f:
+        json.dump(data.json(), f)
+
+url = f'https://storage.googleapis.com/ecm-prod/assets/live/{SESSION_ID}.json?t={filename}'
 data = requests.get(url)
 if data.status_code == 200:
     with open('{}_status.json'.format(filename), 'w') as f:
